@@ -1,0 +1,8 @@
+USE mydb1;
+
+CREATE TABLE student (
+sNo VARCHAR(20) PRIMARY KEY,
+sName VARCHAR(20),
+sex CHAR(2) NOT NULL,
+classNo VARCHAR(20)
+);
