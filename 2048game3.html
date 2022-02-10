@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 所有游戏功能已实现 -->
+<!-- 已实现部分动画功能 -->
+<!-- 此版本运行稳定，完整动画版已经制作完成，但运行情况不稳定，有部分bug，正在修复 -->
+<!-- 2020/2/10 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+
+        }
+
+        body {
+            background-color: #F6F6F6;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* 基础布局开始 */
+        #a,
+        #b,
+        #c,
+        #d {
+            width: 100vw;
+        }
+
+        #a {
+            height: 70vw;
+        }
+
+        #b {
+            height: 100vw;
+        }
+
+        #c,
+        #d {
+            height: 50vw;
+        }
+
+        /* 基础布局结束 */
+        /* 第一部分开始 */
+        #a1,
+        #a2 {
+            height: 25vw;
+            width: 80vw;
+            padding: 0 10vw;
+        }
+
+        #a1 {
+            padding-top: 20vw;
+            color: #776E65;
+        }
+
+        #a1 div {
+            float: left;
+            width: 20vw;
+            height: 25vw;
+            font-weight: 600;
+
+        }
+
+        #a12 {
+            width: 18vw !important;
+            position: relative;
+        }
+
+        #a12 div {
+            width: 10vw;
+            height: 10vw;
+            position: absolute;
+            top: 14vw;
+            left: 4vw;
+            text-align: center;
+            font-size: 8vw;
+            color: black;
+            display: none;
+        }
+
+        #a14 {
+            float: right !important;
+        }
+
+        .p1 {
+            height: 5vw;
+            text-align: center;
+
+        }
+
+        .p2 {
+            text-align: center;
+            line-height: 20vw;
+            font-size: 7vw;
+            font-weight: 600px;
+        }
+
+        #a13,
+        #a14 {
+            background-color: #bbada0;
+            border-radius: 10px;
+            color: white;
+        }
+
+        #a2 div {
+            width: 40vw;
+            height: 25vw;
+            float: left;
+
+
+        }
+
+        #a211 {
+            width: 30vw;
+            height: 15vw;
+            margin: 5vw 5vw;
+            font-weight: 600;
+            color: white;
+            font-size: 7vw;
+            background-color: #bbada0;
+            border-radius: 15px;
+            border: 0px;
+        }
+
+        /* 第一部分结束 */
+
+        /* 第二部分开始 */
+
+        #bb {
+            float: left;
+            height: 80vw;
+            width: 80vw;
+            margin: 8vw;
+            border-style: solid;
+            border-color: #bbada0;
+            border-width: 2vw;
+            border-radius: 15px;
+        }
+
+        #bb div {
+            float: left;
+            width: 18vw;
+            height: 18vw;
+            border-style: solid;
+            border-color: #bbada0;
+            background-color: #EEE4Da59;
+            border-width: 1vw;
+            text-align: center;
+            line-height: 18vw;
+            font-size: 7vw;
+            font-weight: 600;
+            color: #776e65;
+        }
+
+        /* 第二部分结束 */
+        /* 第三部分开始 */
+
+        #c p {
+            margin: 0 8vw;
+        }
+
+        /* 第三部分结束 */
+    </style>
+
+</head>
+
+<body>
+    <div id="a">
+        <div id="a1">
+            <div id="a11">
+                <p class="p1"></p>
+                <p class="p2" id="a111">2048</p>
+            </div>
+            <div id="a12">
+                <div id="and1"></div>
+            </div>
+            <div id="a13">
+                <p class="p1">score</p>
+                <p class="p2" id="a133"></p>
+            </div>
+            <div id="a14">
+                <p class="p1">best</p>
+                <p class="p2" id="a144"></p>
+            </div>
+        </div>
+        <div id="a2">
+            <div id="a21">合并相同方块<br>得到2048的方块!</div>
+            <div id="a22"><button id="a211" onclick="start()">新游戏</button></div>
+        </div>
+    </div>
+    <div id="b">
+
+        <div id="bb">
+            <div id="b1"></div>
+            <div id="b2"></div>
+            <div id="b3"></div>
+            <div id="b4"></div>
+            <div id="b5"></div>
+            <div id="b6"></div>
+            <div id="b7"></div>
+            <div id="b8"></div>
+            <div id="b9"></div>
+            <div id="b10"></div>
+            <div id="b11"></div>
+            <div id="b12"></div>
+            <div id="b13"></div>
+            <div id="b14"></div>
+            <div id="b15"></div>
+            <div id="b16"></div>
+        </div>
+
+
+    </div>
+    <div id="c">
+        <p>游戏玩法:<br>使用方向键移动方块，两个数字相同的方块撞在一起后，将会合并为一个数字是原来两倍的新方块!
+            在手机上可以滑动屏幕来移动方块!</p>
+    </div>
+    <div id="d"></div>
+
+    <script>
+        /* 第一部分开始 */
+        // 初始分数控制开始
+        var score1 = 0, score2 = 0, score3 = 0, score4 = 0;
+        document.getElementById("a133").innerHTML = score1;
+        document.getElementById("a144").innerHTML = score3;
+        // 初始分数控制结束
+
+        /* 第一部分结束 */
+        /* 第二部分开始 */
+        var qp = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+        var sx, sy, ex, ey;
+        var qipan, hd = 0;
+
+        // 启动程序开始
+
+        start();
+        function start() {
+            score1 = 0;
+            document.getElementById("a133").innerHTML = score1;
+            var st1, st2;
+            st1 = Math.floor(Math.random() * (15 - 8 + 1)) + 8;
+            st2 = Math.floor(Math.random() * (7 - 0 + 1)) + 0;
+            var startqp = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+            startqp[st1] = 1
+            startqp[st2] = 1
+            var qpl = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            for (var i = 0; i < 16; i++) {
+                if (startqp[i] != null) {
+                    qpl[i] = 2 ** startqp[i];
+                }
+
+            }
+            for (var i = 0; i < 16; i++) {
+                if (i == st1 || i == st2) {
+                    qp[i] = 1;
+                } else {
+                    qp[i] = null;
+                }
+            }
+
+            for (var i = 0; i < 16; i++) {
+                document.getElementById("b" + (i + 1)).innerHTML = qpl[i];
+            }
+            color();
+        }
+
+        // 启动程序结束
+
+        // 棋盘移动开始
+        function cz(s1, s2, s3, s4, s5) {
+
+            var s1b = 0, s2b = 0;
+
+            if (s2 != null) {
+                if (s1 == null) {
+                    s1 = s2;
+                    s2 = null;
+                } else if (s2 == s1) {
+                    s1 = s1 + 1;
+                    s2 = null;
+                    s1b = 1;
+                    score1 = score1 + (2 ** s1);
+                }
+            }
+
+            if (s3 != null) {
+                if (s2 != null) {
+                    if (s3 == s2) {
+                        s2 = s2 + 1;
+                        s3 = null;
+                        s2b = 1;
+                        score1 = score1 + (2 ** s2)
+                    }
+                } else if (s1 != null && s1b != 1) {
+                    if (s3 == s1) {
+                        s1 = s1 + 1;
+                        s3 = null;
+                        s1b = 1;
+                        score1 = score1 + (2 ** s1)
+                    } else {
+                        s2 = s3;
+                        s3 = null;
+                    }
+                } else if (s1 != null && s1b == 1) {
+                    s2 = s3;
+                    s3 = null;
+                } else {
+                    s1 = s3;
+                    s3 = null;
+                }
+            }
+
+
+            if (s4 != null) {
+                if (s3 != null) {
+                    if (s4 == s3) {
+                        s3 = s3 + 1;
+                        s4 = null;
+                        score1 = score1 + (2 ** s3)
+                    }
+                } else if (s2 != null && s2b != 1) {
+                    if (s4 == s2) {
+                        s2 = s2 + 1;
+                        s4 = null;
+                        score1 = score1 + (2 ** s2)
+                    } else {
+                        s3 = s4;
+                        s4 = null;
+                    }
+                } else if (s2 != null) {
+                    s3 = s4;
+                    s4 = null;
+                } else if (s1 != null && s1b != 1) {
+                    if (s4 == s1) {
+                        s1 = s1 + 1;
+                        s4 = null;
+                        score1 = score1 + (2 ** s1)
+                    } else {
+                        s2 = s4;
+                        s4 = null;
+                    }
+                } else if (s1 != null) {
+                    s2 = s4;
+                    s4 = null;
+                } else {
+                    s1 = s4;
+                    s4 = null;
+                }
+            }
+
+
+            switch (s5) {
+                case 1: qp[0] = s1; qp[1] = s2; qp[2] = s3; qp[3] = s4; break;
+                case 2: qp[4] = s1; qp[5] = s2; qp[6] = s3; qp[7] = s4; break;
+                case 3: qp[8] = s1; qp[9] = s2; qp[10] = s3; qp[11] = s4; break;
+                case 4: qp[12] = s1; qp[13] = s2; qp[14] = s3; qp[15] = s4; break;
+                case 5: qp[3] = s1; qp[2] = s2; qp[1] = s3; qp[0] = s4; break;
+                case 6: qp[7] = s1; qp[6] = s2; qp[5] = s3; qp[4] = s4; break;
+                case 7: qp[11] = s1; qp[10] = s2; qp[9] = s3; qp[8] = s4; break;
+                case 8: qp[15] = s1; qp[14] = s2; qp[13] = s3; qp[12] = s4; break;
+                case 9: qp[0] = s1; qp[4] = s2; qp[8] = s3; qp[12] = s4; break;
+                case 10: qp[1] = s1; qp[5] = s2; qp[9] = s3; qp[13] = s4; break;
+                case 11: qp[2] = s1; qp[6] = s2; qp[10] = s3; qp[14] = s4; break;
+                case 12: qp[3] = s1; qp[7] = s2; qp[11] = s3; qp[15] = s4; break;
+                case 13: qp[12] = s1; qp[8] = s2; qp[4] = s3; qp[0] = s4; break;
+                case 14: qp[13] = s1; qp[9] = s2; qp[5] = s3; qp[1] = s4; break;
+                case 15: qp[14] = s1; qp[10] = s2; qp[6] = s3; qp[2] = s4; break;
+                case 16: qp[15] = s1; qp[11] = s2; qp[7] = s3; qp[3] = s4; break;
+            }
+
+
+
+
+        }
+        // 棋盘移动结束
+        // 手指滑动方向判断，距离过短保护机制，开始
+        function jd(j1, j2, j3, j4) {
+            var j5, j6;
+            if (j1 > j2) {
+                j5 = j1 - j2;
+            } else {
+                j5 = j2 - j1;
+            }
+            if (j3 > j4) {
+                j6 = j3 - j4;
+            } else {
+                j6 = j4 - j3;
+            }
+            if (j5 > j6) {
+                if (j5 < 80) {
+                    return 0;
+                } else if (j1 > j2) {
+                    return 1;//zuo
+                } else {
+                    return 2;//you
+                }
+            } else {
+                if (j6 < 80) {
+                    return 0;
+                } else if (j3 > j4) {
+                    return 3;//shang
+                } else {
+                    return 4;//xia
+                }
+            }
+        }
+        // 手指滑动方向判断，距离过短保护机制，结束
+
+        // 颜色程序开始
+
+        function color() {
+            var c1, c2;
+            for (var i = 0; i < 16; i++) {
+                c2 = qp[i];
+                if (c2 == null) {
+                    c2 = 0;
+                }
+                switch (c2) {
+                    case 0: c1 = "white"; break;
+                    case 1: c1 = "#eee4da"; break;
+                    case 2: c1 = "#ede0c8"; break;
+                    case 3: c1 = "#f2b179"; break;
+                    case 4: c1 = "#f59563"; break;
+                    case 5: c1 = "#f67c5f"; break;
+                    case 6: c1 = "#f65e3b"; break;
+                    case 7: c1 = "#edcf72"; break;
+                    case 8: c1 = "#edcf72"; break;
+                    case 9: c1 = "#edcf72"; break;
+                    case 10: c1 = "#edcf72"; break;
+                    default: c1 = "#edcf72"; break;
+                }
+                document.getElementById("b" + (i + 1)).style.backgroundColor = c1;
+            }
+
+
+
+        }
+        // 颜色程序结束
+        // 主程序开始，手指触摸屏幕触发
+        qipan = document.getElementById("bb");
+        qipan.addEventListener("touchstart", function (s) {
+            sx = s.touches[0].pageX;
+            sy = s.touches[0].pageY;
+
+        }, false);
+        qipan.addEventListener("touchend", function (e) {
+            ex = e.changedTouches[0].pageX;
+            ey = e.changedTouches[0].pageY;
+            hd = jd(sx, ex, sy, ey);
+            // hd是手指滑动方向代码，通过hd判断棋盘移动方向
+
+            score4 = score1;
+
+            // 复制一个数组，用于之后的验证
+            var qpy = [];
+            for (var i = 0; i < 16; i++) {
+                qpy[i] = qp[i];
+            }
+
+            // 棋盘移动开始
+            if (hd == 1) {
+                cz(qp[0], qp[1], qp[2], qp[3], 1);
+                cz(qp[4], qp[5], qp[6], qp[7], 2);
+                cz(qp[8], qp[9], qp[10], qp[11], 3);
+                cz(qp[12], qp[13], qp[14], qp[15], 4);
+            } else if (hd == 2) {
+                cz(qp[3], qp[2], qp[1], qp[0], 5);
+                cz(qp[7], qp[6], qp[5], qp[4], 6);
+                cz(qp[11], qp[10], qp[9], qp[8], 7);
+                cz(qp[15], qp[14], qp[13], qp[12], 8);
+            } else if (hd == 3) {
+                cz(qp[0], qp[4], qp[8], qp[12], 9);
+                cz(qp[1], qp[5], qp[9], qp[13], 10);
+                cz(qp[2], qp[6], qp[10], qp[14], 11);
+                cz(qp[3], qp[7], qp[11], qp[15], 12);
+            } else if (hd == 4) {
+                cz(qp[12], qp[8], qp[4], qp[0], 13);
+                cz(qp[13], qp[9], qp[5], qp[1], 14);
+                cz(qp[14], qp[10], qp[6], qp[2], 15);
+                cz(qp[15], qp[11], qp[7], qp[3], 16);
+            } else if (hd == 0) {
+                return;
+            }
+            // 棋盘移动完成
+
+            // 验证游戏失败，或移动后结果与之前一致，开始
+            var y1 = 0, y2 = 0, y3, y4, y5;
+            for (var i = 0; i < 16; i++) {
+                if (qpy[i] == qp[i]) {
+                    y1++;
+                }
+            }
+            if (y1 == 16) {
+                score2 = score1;
+                cz(qp[0], qp[1], qp[2], qp[3], 1);
+                cz(qp[4], qp[5], qp[6], qp[7], 2);
+                cz(qp[8], qp[9], qp[10], qp[11], 3);
+                cz(qp[12], qp[13], qp[14], qp[15], 4);
+                y1 = 0;
+                for (var i = 0; i < 16; i++) {
+                    if (qpy[i] == qp[i]) {
+                        y1++;
+                    }
+                }
+                if (y1 == 16) {
+                    y2++;
+                }
+                cz(qp[3], qp[2], qp[1], qp[0], 5);
+                cz(qp[7], qp[6], qp[5], qp[4], 6);
+                cz(qp[11], qp[10], qp[9], qp[8], 7);
+                cz(qp[15], qp[14], qp[13], qp[12], 8);
+                y1 = 0;
+                for (var i = 0; i < 16; i++) {
+                    if (qpy[i] == qp[i]) {
+                        y1++;
+                    }
+                }
+                if (y1 == 16) {
+                    y2++;
+                }
+                cz(qp[0], qp[4], qp[8], qp[12], 9);
+                cz(qp[1], qp[5], qp[9], qp[13], 10);
+                cz(qp[2], qp[6], qp[10], qp[14], 11);
+                cz(qp[3], qp[7], qp[11], qp[15], 12);
+                y1 = 0;
+                for (var i = 0; i < 16; i++) {
+                    if (qpy[i] == qp[i]) {
+                        y1++;
+                    }
+                }
+                if (y1 == 16) {
+                    y2++;
+                }
+                cz(qp[12], qp[8], qp[4], qp[0], 13);
+                cz(qp[13], qp[9], qp[5], qp[1], 14);
+                cz(qp[14], qp[10], qp[6], qp[2], 15);
+                cz(qp[15], qp[11], qp[7], qp[3], 16);
+                y1 = 0;
+                for (var i = 0; i < 16; i++) {
+                    if (qpy[i] == qp[i]) {
+                        y1++;
+                    }
+                }
+                if (y1 == 16) {
+                    y2++;
+                }
+
+                score1 = score2;
+
+                if (y2 == 4) {
+                    window.alert("game over");
+                } else {
+                    for (var i = 0; i < 16; i++) {
+                        qp[i] = qpy[i];
+                    }
+                    return;
+                }
+            }
+            // 验证游戏失败，与移动后结果与之前一直，结束
+
+            // 分数程序开始
+
+            if (score1 > score3) {
+                score3 = score1;
+            }
+            var score6 = document.querySelector('#and1');
+            if (score1 > score4) {
+                var score5 = score1 - score4;
+                score6.innerHTML = ('+' + score5);
+                score0();
+            }
+            document.getElementById("a133").innerHTML = score1;
+            document.getElementById("a144").innerHTML = score3;
+
+            // 分数程序结束
+
+            // 将棋盘移动后结果展示开始
+            var n = 0, x, j;
+            for (var i = 0; i < 16; i++) {
+                if (qp[i] == null) {
+                    n++;
+                }
+            }
+
+            x = Math.floor(Math.random() * (n - 1 + 1)) + 1;
+
+            for (var i = 0, j = 1; i < 16; i++) {
+                if (qp[i] == null) {
+                    if (j == x) {
+                        qp[i] = 1;
+                    }
+                    j++;
+                }
+            }
+            // 利用次方调整展示结果
+            var qpl = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+
+            for (var i = 0; i < 16; i++) {
+
+                if (qp[i] != null) {
+                    qpl[i] = 2 ** qp[i];
+                }
+
+            }
+            for (var i = 0; i < 16; i++) {
+                document.getElementById("b" + (i + 1)).innerHTML = qpl[i];
+            }
+
+            color();
+
+        }, false);
+
+        // 将棋盘移动后结果展示结束
+
+
+        /* 第二部分结束 */
+        // 动画开始
+        var and1 = document.querySelector('#and1')
+        var timer = null;
+        function score0() {
+
+            clearInterval(timer);
+            and1.style.display = 'block';
+            timer = setInterval(function () {
+                if (and1.offsetTop === -30) {
+                    clearInterval(timer);
+                    and1.style.top = 15 + 'vw';
+                    and1.style.display = 'none';
+                    score6.innerHTML = '';
+                    return;
+                } else {
+                    and1.style.top = and1.offsetTop + -1 + 'px';
+                }
+
+            }, 1)
+
+
+
+        }
+
+        // 动画结束
+
+
+    </script>
+
+</body>
+
+</html>
