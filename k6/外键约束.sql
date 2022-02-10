@@ -1,0 +1,59 @@
+CREATE TABLE IF NOT EXISTS connect (
+cn INT PRIMARY KEY,
+sn INT
+);
+
+CREATE TABLE IF NOT EXISTS course (
+cname VARCHAR(20) PRIMARY KEY,
+cno INT,
+CONSTRAINT cours_fk FOREIGN KEY(cno) REFERENCES connect(cn)
+);
+
+CREATE TABLE IF NOT EXISTS connect (
+cn INT PRIMARY KEY,
+sn INT
+);
+
+CREATE TABLE IF NOT EXISTS course (
+cname VARCHAR(20) PRIMARY KEY,
+cno INT
+);
+
+ALTER TABLE course ADD CONSTRAINT cours_fk FOREIGN KEY(cno) REFERENCES connect(cn);
+
+INSERT INTO connect VALUES(1,1);
+INSERT INTO connect VALUES(2,1);
+INSERT INTO connect VALUES(3,1);
+INSERT INTO connect VALUES(4,1);
+INSERT INTO course VALUES('a',1);
+INSERT INTO course VALUES('b',1);
+INSERT INTO course VALUES('c',2);
+INSERT INTO course VALUES('d',5);
+
+DELETE FROM connect WHERE cn = 2;
+DELETE FROM connect WHERE cn = 3;
+
+ALTER TABLE course DROP FOREIGN KEY cours_fk;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

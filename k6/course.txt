@@ -1,0 +1,6 @@
+"cname"	"cno"
+"html"	"1"
+"css"	"2"
+"js"	"3"
+"mysql"	"4"
+"jdbc"	"5"
